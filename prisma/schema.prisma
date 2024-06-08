@@ -1,0 +1,62 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+    provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+
+model Board {
+    id        String      @id @default(uuid())
+    name      String      @unique
+    slug      String      @unique
+    createdAt DateTime @default(now())
+    updatedAt DateTime @updatedAt
+    columns Column[]
+    tasks Task[]
+    // subTasks SubTask[]
+}
+
+model Column {
+    id        String      @id @default(uuid())
+    name      String
+    createdAt DateTime @default(now())
+    updatedAt DateTime @updatedAt
+    board       Board     @relation(fields: [boardId], references: [id], onDelete: Cascade)
+    boardId     String
+    tasks Task[]
+
+    @@unique([boardId, name])
+}
+
+model Task {
+    id        String     @id @default(uuid())
+    name      String
+    description String
+    createdAt DateTime @default(now())
+    updatedAt DateTime @updatedAt
+    board       Board     @relation(fields: [boardId], references: [id], onDelete: Cascade)
+    boardId     String
+    column       Column     @relation(fields: [columnId], references: [id], onDelete: Cascade)
+    columnId     String
+    subTasks SubTask[]
+
+    @@unique([columnId, name])
+}
+
+model SubTask {
+    id        String      @id @default(uuid())
+    name      String
+    isCompleted Boolean? @default(false)
+    createdAt DateTime @default(now())
+    updatedAt DateTime @updatedAt
+    task       Task     @relation(fields: [taskId], references: [id], onDelete: Cascade)
+    taskId     String
+    // board       Board     @relation(fields: [boardId], references: [id], onDelete: Cascade)
+    // boardId     String
+}
