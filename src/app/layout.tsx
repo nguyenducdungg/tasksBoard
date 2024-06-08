@@ -6,7 +6,7 @@ import { Toaster } from '@/components/ui/toaster';
 import { onUnhandledRequest } from '@/mocks/msw.utils';
 import { Inter } from 'next/font/google';
 import { cookies } from 'next/headers';
-import { Providers } from '../providers';
+import { Providers } from '../Providers';
 
 import { TRPCReactProvider } from '@/trpc/react';
 
